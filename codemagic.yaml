@@ -5,9 +5,14 @@ workflows:
     environment:
       java: 17
     scripts:
+      - name: Install Gradle
+        script: |
+          wget -q https://services.gradle.org/distributions/gradle-8.9-bin.zip -O /tmp/gradle.zip
+          unzip -q /tmp/gradle.zip -d /tmp
+          echo "GRADLE_HOME=/tmp/gradle-8.9" >> $CM_ENV
+          echo "PATH=/tmp/gradle-8.9/bin:$PATH" >> $CM_ENV
       - name: Build debug APK
         script: |
-          gradle wrapper --gradle-version 8.9
-          ./gradlew :app:assembleDebug
+          /tmp/gradle-8.9/bin/gradle :app:assembleDebug --no-daemon
     artifacts:
       - app/build/outputs/apk/debug/*.apk
